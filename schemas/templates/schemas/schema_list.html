@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <h1>This is schema list</h1>
+    <p>Create new Schema:</p>
+    <a class="btn btn-primary" href="{% url "schemas:schema_create" %}">Add new</a>
+
+    {% for schema in schema_list%}
+        <li>
+            <a href="{% url "schemas:schema_detail" schema.slug %}">{{schema}}</a>
+            Delete: <a class="btn btn-primary" href="{% url "schemas:schema_delete" schema.slug %}">Delete</a>
+        </li>
+    {% endfor %}
+{% endblock body %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <h1>This is {{object}}'s page</h1>
+    <p>Add new column:</p>
+    <a class="btn btn-primary" href="{% url "schemas:column_create" object.slug %}">Add</a>
+    {% for column in object.columns.all %}
+        <li><a href="{% url "schemas:column_edit" column.slug %}">{{column}}</a></li>
+    {% endfor%}
+
+{% endblock body %}
