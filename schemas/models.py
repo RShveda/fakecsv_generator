@@ -47,3 +47,16 @@ class Column(models.Model):
 
     def get_absolute_url(self):
         return reverse('schemas:schema_detail', kwargs={'slug': self.schema.slug})
+
+
+class DataSet(models.Model):
+    title = models.CharField(max_length=80, blank=True, null=True)
+    status = models.CharField(max_length=80, blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True)
+    url = models.FilePathField(path="datasets")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('schemas:dataset_list')

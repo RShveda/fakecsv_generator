@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <h1>This is list of Datasets</h1>
+    <p>Generate new dataset:</p>
+    <form action="{% url "schemas:dataset_create" %}" method="post">
+        {% csrf_token %}
+        <input name="rows" type="number">
+        <input name="schema" type="text">
+        <input class = "btn btn-primary" type="submit">
+    </form>
+
+    {% for dataset in dataset_list%}
+        <li>
+            {{dataset}} created at: {{dataset.date}}
+        </li>
+    {% endfor %}
+{% endblock body %}

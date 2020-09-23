@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import (CreateView, UpdateView, DeleteView)
 from django.views.generic.list import ListView
-from .models import (Schema, Column, DataTypes)
+from .models import (Schema, Column, DataTypes, DataSet)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import (ColumnForm)
 # Create your views here.
@@ -45,3 +45,13 @@ class ColumnDeleteView(LoginRequiredMixin, DeleteView):
     model = Column
     # todo update reverse url
     success_url = reverse_lazy('schemas')
+
+
+class DataSetListView(ListView):
+    model = DataSet
+
+
+class GenerateFileView(CreateView):
+    model = DataSet
+
+
