@@ -1,11 +1,16 @@
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.shortcuts import redirect
+from django.urls import reverse_lazy, reverse
+from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import (CreateView, UpdateView, DeleteView)
 from django.views.generic.list import ListView
 from .models import (Schema, Column, DataTypes, DataSet)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import (ColumnForm)
+from .csv_generator import CsvFaker
+
+
 # Create your views here.
 
 
@@ -41,6 +46,7 @@ class ColumnUpdateView(LoginRequiredMixin, UpdateView):
     model = Column
     fields = ["name", "order", "data_types"]
 
+
 class ColumnDeleteView(LoginRequiredMixin, DeleteView):
     model = Column
     # todo update reverse url
@@ -50,8 +56,23 @@ class ColumnDeleteView(LoginRequiredMixin, DeleteView):
 class DataSetListView(ListView):
     model = DataSet
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['schema_list'] = Schema.objects.all()
+        return context
 
-class GenerateFileView(CreateView):
+
+class GenerateFileView(View):
     model = DataSet
+
+    def post(self, request, *args, **kwargs):
+        print(request.POST["schema"])
+        schema = request.POST["schema"]
+        rows = request.POST["rows"]
+        url = CsvFaker.make_file(schema, rows)
+        status = "processing"
+        new_set = DataSet.objects.create(url=url, title=schema, status=status)
+        new_set.save()
+        return redirect(reverse("schemas:dataset_list"))
 
 

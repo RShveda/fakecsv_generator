@@ -53,7 +53,7 @@ class DataSet(models.Model):
     title = models.CharField(max_length=80, blank=True, null=True)
     status = models.CharField(max_length=80, blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
-    url = models.FilePathField(path="datasets")
+    url = models.FilePathField(path="media/datasets", blank=True, null=True)
 
     def __str__(self):
         return self.title

@@ -6,7 +6,11 @@
     <form action="{% url "schemas:dataset_create" %}" method="post">
         {% csrf_token %}
         <input name="rows" type="number">
-        <input name="schema" type="text">
+<        <select name="schema" id="schema">
+            {% for schema in schema_list %}
+            <option value="{{schema}}">{{schema}}</option>
+            {% endfor %}
+        </select>
         <input class = "btn btn-primary" type="submit">
     </form>
 
