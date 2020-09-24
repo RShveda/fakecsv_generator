@@ -16,7 +16,7 @@
 
     {% for dataset in dataset_list%}
         <li>
-            {{dataset}} created at: {{dataset.date}}
+            {{dataset}} created at: {{dataset.date}} url: {{dataset.url}}
         </li>
     {% endfor %}
 {% endblock body %}
