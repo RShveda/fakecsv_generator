@@ -46,7 +46,7 @@ class ColumnCreateView(LoginRequiredMixin, CreateView):
 
 class ColumnUpdateView(LoginRequiredMixin, UpdateView):
     model = Column
-    fields = ["name", "order", "data_types"]
+    fields = ["name", "order", "data_type"]
 
 
 class ColumnDeleteView(LoginRequiredMixin, DeleteView):
@@ -71,14 +71,12 @@ class GenerateFileView(View):
         print(request.POST["schema"])
         schema = request.POST["schema"]
         rows = request.POST["rows"]
-        url = make_file_async.delay(schema, rows)
-        # result = create_task.delay(int(rows))
+        # make_file_async.delay(schema, rows)
+        CsvFaker.make_file(schema, rows)
         # result = test_task.delay(1,2)
         status = "processing"
         new_set = DataSet.objects.create(title=schema, status=status, url="")
         new_set.save()
-        print(url.id)
-        print(url.ready())
         return redirect(reverse("schemas:dataset_list"))
 
 

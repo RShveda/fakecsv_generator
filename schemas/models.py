@@ -34,7 +34,7 @@ class Column(models.Model):
     name = models.CharField(max_length=80)
     schema = models.ForeignKey(Schema, on_delete=models.CASCADE, related_name="columns")
     order = models.IntegerField(unique=True)
-    data_types = models.ManyToManyField(DataTypes)
+    data_type = models.ForeignKey(DataTypes, on_delete=models.CASCADE)
     range_min = models.IntegerField(blank=True, null=True)
     range_max = models.IntegerField(blank=True, null=True)
 

@@ -27,8 +27,8 @@ SCHEMAS_DIR = BASE_DIR / 'schemas/templates/schemas'
 import os
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '_h^6usgntj@0!$9sjc5m-^#10w2mdaandh_zwd+p_n8+90$5&v')
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+DEBUG = True
+# DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = ["csv-generator.herokuapp.com", '127.0.0.1']
 
@@ -160,12 +160,3 @@ CELERY_TIMEZONE = 'Europe/Kiev'
 # import dj_database_url
 # db_from_env = dj_database_url.config(conn_max_age=500)
 # DATABASES['default'].update(db_from_env)
-
-# celery -A fakecsv_generator worker --pool=solo -l info <-
-# celery -A fakecsv_generator worker --loglevel info
-# celery -A fakecsv_generator worker -l info -n--one -0fair
-# celery -A fakecsv_generator purge
-# celery -A fakecsv_generator status
-# celery worker -A fakecsv_generator -l infor
-# celery -A fakecsv_generator flower
-# from schemas.tasks import add, create_task, make_file_async
