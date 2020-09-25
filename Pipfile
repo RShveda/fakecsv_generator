@@ -13,10 +13,10 @@ dj-database-url = "*"
 psycopg2 = "*"
 whitenoise = "*"
 redis = "*"
-flower = "*"
-celery = "*"
 vine = "*"
+celery = "==4.4.7"
 django-celery-results = "*"
+flower = "*"
 
 [requires]
 python_version = "3.8"
