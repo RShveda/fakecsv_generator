@@ -9,6 +9,8 @@ from .models import (Schema, Column, DataTypes, DataSet)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import (ColumnForm)
 from .csv_generator import CsvFaker
+from .tasks import add as test_task
+from .tasks import create_task, make_file_async
 
 
 # Create your views here.
@@ -69,10 +71,14 @@ class GenerateFileView(View):
         print(request.POST["schema"])
         schema = request.POST["schema"]
         rows = request.POST["rows"]
-        url = CsvFaker.make_file(schema, rows)
+        url = make_file_async.delay(schema, rows)
+        # result = create_task.delay(int(rows))
+        # result = test_task.delay(1,2)
         status = "processing"
-        new_set = DataSet.objects.create(url=url, title=schema, status=status)
+        new_set = DataSet.objects.create(title=schema, status=status, url="")
         new_set.save()
+        print(url.id)
+        print(url.ready())
         return redirect(reverse("schemas:dataset_list"))
 
 

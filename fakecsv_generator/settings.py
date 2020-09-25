@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_results',
     'schemas',
 ]
 
@@ -138,7 +139,33 @@ LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "/"
 
+# Celery configs
+CELERY_RESULT_BACKEND = 'django-db'
+# CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://localhost")
+# CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://localhost")
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_CONTENT_ENCODING = 'utf-8'
+CELERY_ENABLE_REMOTE_CONTROL = False
+CELERY_SEND_EVENTS = False
+CELERY_TIMEZONE = 'Europe/Kiev'
+# CELERY_IMPORTS = (
+#     'schemas.tasks',
+#     'schemas.csv_generator',
+# )
+
 # Heroku: Update database configuration from $DATABASE_URL.
 # import dj_database_url
 # db_from_env = dj_database_url.config(conn_max_age=500)
 # DATABASES['default'].update(db_from_env)
+
+# celery -A fakecsv_generator worker --pool=solo -l info <-
+# celery -A fakecsv_generator worker --loglevel info
+# celery -A fakecsv_generator worker -l info -n--one -0fair
+# celery -A fakecsv_generator purge
+# celery -A fakecsv_generator status
+# celery worker -A fakecsv_generator -l infor
+# celery -A fakecsv_generator flower
+# from schemas.tasks import add, create_task, make_file_async
