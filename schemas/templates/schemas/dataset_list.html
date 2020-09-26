@@ -16,7 +16,8 @@
 
     {% for dataset in dataset_list%}
         <li>
-            {{dataset}} created at: {{dataset.date}} url: {{dataset.url}}
+            {{dataset}} created at: {{dataset.date}} url: /{{dataset.url}}
+            <a href="/{{dataset.url}}" download>file</a>
         </li>
     {% endfor %}
 {% endblock body %}

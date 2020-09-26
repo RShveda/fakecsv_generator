@@ -8,12 +8,15 @@ from celery import shared_task
 class CsvFaker:
 
     @shared_task
-    def make_file(schema, rows):
+    def make_file(schema, rows, new_data):
         with open(str(settings.MEDIA_ROOT) + "/datasets/" + schema + str(rows) + ".csv", 'w', newline='') as f:
             myfile = File(f)
             myfile.write(CsvFaker.generate_data(schema, rows))
         myfile.closed
         f.closed
+        new_data.status = "uploaded"
+        new_data.url = "media/datasets\\"+ os.path.basename(myfile.file.name)
+        new_data.save()
         print("file created")
         return myfile.name
 
@@ -29,7 +32,7 @@ class CsvFaker:
         """
         This method formats data according to faker csv(dsv) data format described here:
         https://faker.readthedocs.io/en/master/providers/faker.providers.misc.html#faker.providers.misc.Provider.dsv
-        :param fake:
+        :param fake - faker object that will be generating fake data
         :return:
         """
         header = []
@@ -40,12 +43,15 @@ class CsvFaker:
                 print(column.data_type)
                 if str(column.data_type) == "integer":
                     data_columns.append("{{pyint:range" + str(idx) + "}}")
+                    fake.set_arguments('range' + str(idx),
+                                       {'min_value': column.range_min, 'max_value': column.range_max})
                 elif str(column.data_type) == "text":
                     data_columns.append("{{paragraph:range" + str(idx) + "}}")
+                    fake.set_arguments('range' + str(idx),
+                                       {'nb_sentences': (column.range_max+column.range_min)/2})
                 else:
                     # format not supported
                     data_columns.append("{{" + str(column.data_type) + "}}")
-                fake.set_arguments('range' + str(idx), {'min_value': column.range_min, 'max_value': column.range_max})
             else:
                 data_columns.append("{{" + str(column.data_type) + "}}")
         return (tuple(header), tuple(data_columns))
