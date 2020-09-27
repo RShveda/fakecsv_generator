@@ -14,7 +14,7 @@ class CsvFaker:
             myfile.write(CsvFaker.generate_data(schema, rows))
         myfile.closed
         f.closed
-        print("created")
+        print(pk)
         print(myfile.name)
         print(myfile.file.name)
         new_data = DataSet.objects.get(pk=pk)
