@@ -27,8 +27,8 @@ SCHEMAS_DIR = BASE_DIR / 'schemas/templates/schemas'
 import os
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '_h^6usgntj@0!$9sjc5m-^#10w2mdaandh_zwd+p_n8+90$5&v')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+# DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = ["csv-generator.herokuapp.com", '127.0.0.1']
 
@@ -142,7 +142,8 @@ LOGOUT_REDIRECT_URL = "/"
 # Celery configs
 CELERY_RESULT_BACKEND = 'django-db'
 # CELERY_CACHE_BACKEND = 'django-cache'
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://localhost")
+CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://localhost")
+
 # CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://localhost")
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
