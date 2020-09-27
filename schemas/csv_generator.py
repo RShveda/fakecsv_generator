@@ -16,7 +16,7 @@ class CsvFaker:
         f.closed
         new_data = DataSet.objects.get(pk=pk)
         new_data.status = "ready"
-        new_data.url = "media/datasets\\"+ os.path.basename(myfile.file.name)
+        new_data.url = "media/datasets\"+ os.path.basename(myfile.file.name)
         new_data.save()
         return new_data.url
 
