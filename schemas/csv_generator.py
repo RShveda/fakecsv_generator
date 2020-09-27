@@ -14,6 +14,9 @@ class CsvFaker:
             myfile.write(CsvFaker.generate_data(schema, rows))
         myfile.closed
         f.closed
+        print("created")
+        print(myfile.name)
+        print(myfile.file.name)
         new_data = DataSet.objects.get(pk=pk)
         new_data.status = "ready"
         new_data.url = "media/datasets/" + os.path.basename(myfile.file.name)
@@ -40,7 +43,6 @@ class CsvFaker:
         for idx, column in enumerate(columns):
             header.append(column.name)
             if (column.range_min and column.range_max) is not None:
-                print(column.data_type)
                 if str(column.data_type) == "integer":
                     data_columns.append("{{pyint:range" + str(idx) + "}}")
                     fake.set_arguments('range' + str(idx),

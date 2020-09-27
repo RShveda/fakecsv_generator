@@ -69,7 +69,6 @@ class GenerateFileView(View):
     model = DataSet
 
     def post(self, request, *args, **kwargs):
-        print(request.POST["schema"])
         schema = request.POST["schema"]
         rows = request.POST["rows"]
         status = "processing"
