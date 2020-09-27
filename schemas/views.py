@@ -72,12 +72,13 @@ class GenerateFileView(View):
         print(request.POST["schema"])
         schema = request.POST["schema"]
         rows = request.POST["rows"]
-        # make_file_async.delay(schema, rows)
         status = "processing"
         new_data = DataSet.objects.create(title=schema, status=status, url="")
-        CsvFaker.make_file(schema, rows, new_data)
-        # result = test_task.delay(1,2)
         new_data.save()
+        make_file_async.delay(schema, rows, new_data.pk)
+        # CsvFaker.make_file(schema, rows, new_data.pk)
+        # result = test_task.delay(1,2)
+
         return redirect(reverse("schemas:dataset_list"))
 
 
@@ -87,9 +88,9 @@ class DataSetStatusView(View):
         pk = kwargs["pk"]
         data_set = DataSet.objects.get(pk=pk)
         status = {
-            "status":data_set.status
+            "status":data_set.status,
+            "url":data_set.url,
         }
-        data_set.status
         return JsonResponse(status, status=200)
 
 

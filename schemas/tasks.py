@@ -15,8 +15,8 @@ def create_task(task_type):
     return True
 
 @shared_task
-def make_file_async(schema, rows):
+def make_file_async(schema, rows, pk):
     print("creating file async..")
-    url = CsvFaker.make_file(schema, rows)
+    url = CsvFaker.make_file(schema, rows, pk)
     print("file created async")
     return url

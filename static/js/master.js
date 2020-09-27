@@ -19,8 +19,10 @@ function getStatus(id) {
     $('#'+id).toggleClass('disabled btn-outline-warning', false);
     $('#'+id).toggleClass('btn-outline-success', true);
     const status = res.status;
+    const url = res.url;
+    $('#'+id).attr("href", "/"+url);
     console.log(res.status)
-    if (status === 'uploaded') return false;
+    if (status === 'ready') return false;
     $('#'+id).html(status);
     $('#'+id).toggleClass('disabled btn-outline-warning', true);
     $('#'+id).toggleClass('btn-outline-success', false);

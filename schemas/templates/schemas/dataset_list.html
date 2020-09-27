@@ -17,7 +17,7 @@
 
     {% for dataset in dataset_list%}
         <li>
-            {{dataset}} created at: {{dataset.date}} url:
+            {{dataset}} created at: {{dataset.date}} url: {{dataset.url}}
             <a class="btn btn-status" id={{dataset.pk}}  href="/{{dataset.url}}" download></a>
         </li>
     {% endfor %}

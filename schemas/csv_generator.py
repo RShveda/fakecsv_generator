@@ -1,5 +1,5 @@
 from django.core.files import File
-from .models import Schema
+from .models import Schema, DataSet
 import os
 from django.conf import settings
 from faker import Faker
@@ -8,17 +8,17 @@ from celery import shared_task
 class CsvFaker:
 
     @shared_task
-    def make_file(schema, rows, new_data):
+    def make_file(schema, rows, pk):
         with open(str(settings.MEDIA_ROOT) + "/datasets/" + schema + str(rows) + ".csv", 'w', newline='') as f:
             myfile = File(f)
             myfile.write(CsvFaker.generate_data(schema, rows))
         myfile.closed
         f.closed
+        new_data = DataSet.objects.get(pk=pk)
         new_data.status = "ready"
         new_data.url = "media/datasets\\"+ os.path.basename(myfile.file.name)
         new_data.save()
-        print("file created")
-        return myfile.name
+        return new_data.url
 
     def generate_data(schema, rows):
         schema = Schema.objects.get(name=schema)
