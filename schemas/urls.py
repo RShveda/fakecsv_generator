@@ -17,7 +17,7 @@ from django.urls import path
 from .views import (SchemaCreateView, SchemaDeleteView, SchemaUpdateView,
                     SchemaDetailView, SchemaListView, ColumnCreateView,
                     ColumnDeleteView, ColumnUpdateView, DataSetListView,
-                    GenerateFileView)
+                    GenerateFileView, DataSetStatusView,)
 
 app_name = "schemas"
 
@@ -32,4 +32,5 @@ urlpatterns = [
     path('columns/<slug:slug>/delete', ColumnDeleteView.as_view(), name="column_delete"),
     path('datasets/', DataSetListView.as_view(), name="dataset_list"),
     path('datasets/new/', GenerateFileView.as_view(), name="dataset_create"),
+    path('datasets/<pk>/', DataSetStatusView.as_view(), name="dataset_status"),
 ]

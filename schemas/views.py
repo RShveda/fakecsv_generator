@@ -11,6 +11,7 @@ from .forms import (ColumnForm)
 from .csv_generator import CsvFaker
 from .tasks import add as test_task
 from .tasks import create_task, make_file_async
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -78,5 +79,19 @@ class GenerateFileView(View):
         # result = test_task.delay(1,2)
         new_data.save()
         return redirect(reverse("schemas:dataset_list"))
+
+
+class DataSetStatusView(View):
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs["pk"]
+        data_set = DataSet.objects.get(pk=pk)
+        status = {
+            "status":data_set.status
+        }
+        data_set.status
+        return JsonResponse(status, status=200)
+
+
 
 

@@ -14,7 +14,7 @@ class CsvFaker:
             myfile.write(CsvFaker.generate_data(schema, rows))
         myfile.closed
         f.closed
-        new_data.status = "uploaded"
+        new_data.status = "ready"
         new_data.url = "media/datasets\\"+ os.path.basename(myfile.file.name)
         new_data.save()
         print("file created")
