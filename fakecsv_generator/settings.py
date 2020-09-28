@@ -146,7 +146,7 @@ DATABASES['default'].update(db_from_env)
 
 # Celery configs
 # CELERY_RESULT_BACKEND = os.environ.get("DJ_DATABASE_URL", 'django-db')
-CELERY_RESULT_BACKEND = db_from_env
+CELERY_RESULT_BACKEND = "postgresql_psycopg2://tppdyftitvxrgx:b51d7b0265cde36e722b0220e18d18c3976b2ab2910425ad20f9a5657cd09d69@ec2-54-195-247-108.eu-west-1.compute.amazonaws.com:5432/dd09j37a4sinjc"
 # CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://localhost")
 
