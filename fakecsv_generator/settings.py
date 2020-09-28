@@ -139,8 +139,13 @@ LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "/"
 
+# Heroku: Update database configuration from $DATABASE_URL.
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
 # Celery configs
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = os.environ.get("DATABASE_URL", 'django-db')
 # CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://localhost")
 
@@ -157,7 +162,4 @@ CELERY_TIMEZONE = 'Europe/Kiev'
 #     'schemas.csv_generator',
 # )
 
-# Heroku: Update database configuration from $DATABASE_URL.
-# import dj_database_url
-# db_from_env = dj_database_url.config(conn_max_age=500)
-# DATABASES['default'].update(db_from_env)
+
