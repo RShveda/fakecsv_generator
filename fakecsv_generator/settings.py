@@ -145,7 +145,8 @@ db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
 # Celery configs
-CELERY_RESULT_BACKEND = os.environ.get("DATABASE_URL", 'django-db')
+# CELERY_RESULT_BACKEND = os.environ.get("DJ_DATABASE_URL", 'django-db')
+CELERY_RESULT_BACKEND = db_from_env
 # CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://localhost")
 
