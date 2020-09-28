@@ -74,8 +74,8 @@ class GenerateFileView(View):
         status = "processing"
         new_data = DataSet.objects.create(title=schema, status=status, url="")
         new_data.save()
-        make_file_async.delay(schema, rows, new_data.pk)
-        # CsvFaker.make_file(schema, rows, new_data.pk)
+        # make_file_async.delay(schema, rows, new_data.pk)
+        CsvFaker.make_file(schema, rows, new_data.pk)
         # result = test_task.delay(1,2)
 
         return redirect(reverse("schemas:dataset_list"))

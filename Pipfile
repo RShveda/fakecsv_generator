@@ -17,6 +17,7 @@ vine = "*"
 celery = "==4.4.7"
 django-celery-results = "*"
 flower = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"
