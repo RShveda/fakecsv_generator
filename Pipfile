@@ -18,6 +18,8 @@ celery = "==4.4.7"
 django-celery-results = "*"
 flower = "*"
 requests = "*"
+django-storages = "*"
+boto3 = "*"
 
 [requires]
 python_version = "3.8"
