@@ -20,7 +20,7 @@ function getStatus(id) {
     $('#'+id).toggleClass('btn-outline-success', true);
     const status = res.status;
     const url = res.url;
-    $('#'+id).attr("href", "/"+url);
+    $('#'+id).attr("href", url);
     console.log(res.status)
     if (status === 'ready') return false;
     $('#'+id).html(status);

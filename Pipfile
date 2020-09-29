@@ -20,6 +20,7 @@ flower = "*"
 requests = "*"
 django-storages = "*"
 boto3 = "*"
+cloudinary = "*"
 
 [requires]
 python_version = "3.8"

@@ -4,22 +4,26 @@ import os
 from django.conf import settings
 from faker import Faker
 from celery import shared_task
+import cloudinary.uploader
 
 class CsvFaker:
 
     @shared_task
     def make_file(schema, rows, pk):
-        with open(str(settings.MEDIA_ROOT) + "/datasets/" + schema + str(rows) + ".csv", 'w', newline='') as f:
-            myfile = File(f)
+        with open(str(settings.MEDIA_ROOT) + "/datasets/buffer" + ".csv", 'w', newline='') as myfile:
+            # myfile = File(f)
             myfile.write(CsvFaker.generate_data(schema, rows))
         myfile.closed
-        f.closed
+        # f.closed
+        uploaded_file = cloudinary.uploader.upload(myfile.name, resource_type="raw", public_id=schema + str(rows))
+        print (uploaded_file["secure_url"])
         print(pk)
         print(myfile.name)
-        print(myfile.file.name)
+        # print(myfile.file.name)
         new_data = DataSet.objects.get(pk=pk)
         new_data.status = "ready"
-        new_data.url = "media/datasets/" + os.path.basename(myfile.file.name)
+        # new_data.url = "media/datasets/" + os.path.basename(myfile.file.name)
+        new_data.url = uploaded_file["secure_url"]
         new_data.save()
         return new_data.url
 
