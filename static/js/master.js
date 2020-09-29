@@ -15,7 +15,7 @@ function getStatus(id) {
   })
   .done((res) => {
     console.log(id)
-    $('#'+id).html("download");
+    $('#'+id).html("Ready");
     $('#'+id).toggleClass('disabled btn-outline-warning', false);
     $('#'+id).toggleClass('btn-outline-success', true);
     const status = res.status;

@@ -1,14 +1,36 @@
 {% extends "base.html" %}
 
 {% block body %}
-    <h1>This is schema list</h1>
-    <p>Create new Schema:</p>
-    <a class="btn btn-primary" href="{% url "schemas:schema_create" %}">Add new</a>
+    <div class="row header d-flex align-items-center">
+        <h1 class="col">Data schemas</h1>
+        <div class="col">
+            <a class="btn btn-primary float-right" href="{% url "schemas:schema_create" %}">New Schema</a>
+        </div>
+    </div>
 
-    {% for schema in schema_list%}
-        <li>
-            <a href="{% url "schemas:schema_detail" schema.slug %}">{{schema}}</a>
-            Delete: <a class="btn btn-primary" href="{% url "schemas:schema_delete" schema.slug %}">Delete</a>
-        </li>
-    {% endfor %}
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for schema in schema_list%}
+                    <tr>
+                        <th scope="row">{{schema.id}}</th>
+                        <td>{{schema}}</td>
+                        <td>{{schema.date}}</td>
+                        <td>
+                            <a class="btn btn-outline-primary" href="{% url "schemas:schema_detail" schema.slug %}">Edit</a>
+                            <a class="btn btn-outline-danger" href="{% url "schemas:schema_delete" schema.slug %}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock body %}

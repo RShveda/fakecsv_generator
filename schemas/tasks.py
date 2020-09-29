@@ -19,4 +19,4 @@ def make_file_async(schema, rows, pk):
     print("creating file async..")
     url = CsvFaker.make_file(schema, rows, pk)
     print("file created async")
-    return url
+    return True

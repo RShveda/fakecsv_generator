@@ -2,24 +2,45 @@
 
 {% block body %}
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <h1>This is list of Datasets</h1>
-    <p>Generate new dataset:</p>
-    <form action="{% url "schemas:dataset_create" %}" method="post">
-        {% csrf_token %}
-        <input name="rows" type="number">
-<        <select name="schema" id="schema">
-            {% for schema in schema_list %}
-            <option value="{{schema}}">{{schema}}</option>
-            {% endfor %}
-        </select>
-        <input class = "btn btn-primary" type="submit">
-    </form>
 
-    {% for dataset in dataset_list%}
-        <li>
-            {{dataset}} created at: {{dataset.date}} url: {{dataset.url}}
-            <a class="btn btn-status" id={{dataset.pk}}  href="/{{dataset.url}}" download></a>
-        </li>
-    {% endfor %}
+    <div class="row header d-flex align-items-center">
+        <h1 class="col">Data sets</h1>
+
+        <div class="col ">
+            <form action="{% url "schemas:dataset_create" %}" method="post">
+                {% csrf_token %}
+                <input name="rows" type="number">
+                <select name="schema" id="schema">
+                    {% for schema in schema_list %}
+                    <option value="{{schema}}">{{schema}}</option>
+                    {% endfor %}
+                </select>
+                <input class="btn btn-primary" type="submit" value="New dataset">
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dataset in dataset_list%}
+                    <tr>
+                        <th scope="row">{{dataset.id}}</th>
+                        <td>{{dataset.date}}</td>
+                        <td>
+                            <a class="btn btn-status btn-outline-primary" id={{dataset.pk}}  href="/{{dataset.url}}" download></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock body %}

@@ -1,8 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
-from django.core.files.storage import FileSystemStorage
-from fakecsv_generator.storage_backends import PublicMediaStorage
+
 
 # Create your models here.
 
@@ -52,10 +51,6 @@ class Column(models.Model):
 
     def get_absolute_url(self):
         return reverse('schemas:schema_detail', kwargs={'slug': self.schema.slug})
-
-
-def select_storage():
-    return FileSystemStorage() if settings.USE_S3 else PublicMediaStorage()
 
 class DataSet(models.Model):
     title = models.CharField(max_length=80, blank=True, null=True)

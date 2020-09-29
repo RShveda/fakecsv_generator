@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_celery_results',
     'schemas',
-    'storages',
     'cloudinary',
 ]
 
@@ -126,46 +125,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-# USE_S3 = os.getenv('USE_S3') == 'TRUE'
-USE_S3 = False
 
-if USE_S3:
-    FELIX_AWS_ACCESS_KEY_ID = "AKIAU4LAKYYRUW27Y363"
-    FELIX_AWS_SECRET_ACCESS_KEY = "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"
-    FELIX_AWS_USER_ARN = "arn:aws:iam::335746352675:user/felix-users/ca7f76122b-4c1ab6b57a"
-    FELIX_USER_EMAIL = "ca7f76122b@heroku-app.com"
-    FELIX_USER_PASSWORD = "2a5c16a736f17a69bfdc"
-    S3_BUCKET = "felix-cloud-shared-1-csv-space"
-
-    # aws settings
-    AWS_ACCESS_KEY_ID = os.getenv('FELIX_AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.getenv('FELIX_AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = os.getenv('S3_BUCKET')
-    AWS_DEFAULT_ACL = 'public-read'
-    AWS_S3_CUSTOM_DOMAIN = f'{S3_BUCKET}.s3.amazonaws.com'
-    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-    # s3 static settings
-    # AWS_LOCATION = 'static'
-    # STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-    # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    # s3 public media settings
-    PUBLIC_MEDIA_LOCATION = 'media'
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
-    DEFAULT_FILE_STORAGE = 'fakecsv_generator.storage_backends.PublicMediaStorage'
-else:
-    # STATIC_URL = '/staticfiles/'
-    # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    MEDIA_DIR = BASE_DIR / 'media'
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = MEDIA_DIR
+MEDIA_DIR = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = MEDIA_DIR
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_DIR = BASE_DIR / 'static'
 STATICFILES_DIRS = [STATIC_DIR,]
-
-
-
 
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "login"
