@@ -27,8 +27,8 @@ SCHEMAS_DIR = BASE_DIR / 'schemas/templates/schemas'
 import os
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '_h^6usgntj@0!$9sjc5m-^#10w2mdaandh_zwd+p_n8+90$5&v')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+# DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = ["csv-generator.herokuapp.com", '127.0.0.1']
 
@@ -139,10 +139,18 @@ LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "/"
 
+# Heroku: Update database configuration from $DATABASE_URL.
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
 # Celery configs
-CELERY_RESULT_BACKEND = 'django-db'
+# CELERY_RESULT_BACKEND = os.environ.get("DJ_DATABASE_URL", 'django-db')
+# CELERY_RESULT_BACKEND = "db+postgresql://tppdyftitvxrgx:b51d7b0265cde36e722b0220e18d18c3976b2ab2910425ad20f9a5657cd09d69@ec2-54-195-247-108.eu-west-1.compute.amazonaws.com:5432/dd09j37a4sinjc"
+CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL", 'django-db')
 # CELERY_CACHE_BACKEND = 'django-cache'
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://localhost")
+CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://localhost")
+
 # CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://localhost")
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
@@ -156,7 +164,4 @@ CELERY_TIMEZONE = 'Europe/Kiev'
 #     'schemas.csv_generator',
 # )
 
-# Heroku: Update database configuration from $DATABASE_URL.
-# import dj_database_url
-# db_from_env = dj_database_url.config(conn_max_age=500)
-# DATABASES['default'].update(db_from_env)
+

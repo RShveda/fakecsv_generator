@@ -33,10 +33,13 @@ class Column(models.Model):
     slug = models.CharField(max_length=100, null=True)
     name = models.CharField(max_length=80)
     schema = models.ForeignKey(Schema, on_delete=models.CASCADE, related_name="columns")
-    order = models.IntegerField(unique=True)
+    order = models.IntegerField()
     data_type = models.ForeignKey(DataTypes, on_delete=models.CASCADE)
     range_min = models.IntegerField(blank=True, null=True)
     range_max = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('schema', 'order',)
 
     def __str__(self):
         return self.name
@@ -53,7 +56,7 @@ class DataSet(models.Model):
     title = models.CharField(max_length=80, blank=True, null=True)
     status = models.CharField(max_length=80, blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
-    url = models.FilePathField(path="media/datasets", blank=True, null=True)
+    url = models.FileField(blank=True, null=True)
 
     def __str__(self):
         return self.title

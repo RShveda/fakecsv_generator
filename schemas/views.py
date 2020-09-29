@@ -12,6 +12,7 @@ from .csv_generator import CsvFaker
 from .tasks import add as test_task
 from .tasks import create_task, make_file_async
 from django.http import JsonResponse
+from pathlib import Path
 
 
 # Create your views here.
@@ -69,16 +70,15 @@ class GenerateFileView(View):
     model = DataSet
 
     def post(self, request, *args, **kwargs):
-        print(request.POST["schema"])
         schema = request.POST["schema"]
         rows = request.POST["rows"]
         status = "processing"
-        new_data = DataSet.objects.create(title=schema, status=status, url="")
+        new_data = DataSet.objects.create(title=schema, status=status)
         new_data.save()
-        make_file_async.delay(schema, rows, new_data.pk)
-        # CsvFaker.make_file(schema, rows, new_data.pk)
+        print("dataset created")
+        # make_file_async.delay(schema, rows, new_data.pk)
+        CsvFaker.make_file(schema, rows, new_data.pk)
         # result = test_task.delay(1,2)
-
         return redirect(reverse("schemas:dataset_list"))
 
 
@@ -87,10 +87,16 @@ class DataSetStatusView(View):
     def get(self, request, *args, **kwargs):
         pk = kwargs["pk"]
         data_set = DataSet.objects.get(pk=pk)
-        status = {
-            "status":data_set.status,
-            "url":data_set.url,
-        }
+        my_file = Path(str(data_set.url))
+        if my_file.is_file():
+            status = {
+                "status":data_set.status,
+                "url":str(data_set.url),
+            }
+        else:
+            status = {
+                "status": "archived",
+            }
         return JsonResponse(status, status=200)
 
 
