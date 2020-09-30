@@ -15,6 +15,7 @@ from django.http import JsonResponse
 from pathlib import Path
 
 
+
 # Create your views here.
 
 
@@ -42,6 +43,14 @@ class ColumnCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         schema = Schema.objects.get(slug=self.kwargs["schema"])
+        order = form.instance.order
+        try:
+            Column.objects.get(schema=schema, order=order)
+            form.add_error('order', 'Some other column already uses this order number.'
+                                ' Please choose another on.')
+            return self.form_invalid(form)
+        except:
+            pass
         form.instance.schema = schema
         return super().form_valid(form)
 
@@ -50,11 +59,26 @@ class ColumnUpdateView(LoginRequiredMixin, UpdateView):
     model = Column
     form_class = ColumnForm
 
+    def form_valid(self, form):
+        order = form.instance.order
+        schema = form.instance.schema
+        try:
+            Column.objects.get(schema=schema, order=order)
+            form.add_error('order', 'Some other column already uses this order number.'
+                                    ' Please choose another on.')
+            return self.form_invalid(form)
+        except:
+            pass
+        return super().form_valid(form)
+
 
 class ColumnDeleteView(LoginRequiredMixin, DeleteView):
     model = Column
-    # todo update reverse url
-    success_url = reverse_lazy('schemas')
+
+    def get_success_url(self, **kwargs):
+        column = Column.objects.get(slug=self.kwargs["slug"])
+        schema = Schema.objects.get(columns=column)
+        return reverse_lazy('schemas:schema_detail', kwargs={'slug': schema.slug})
 
 
 class DataSetListView(ListView):
