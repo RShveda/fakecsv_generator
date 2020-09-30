@@ -1,4 +1,7 @@
+console.log("js loaded")
+
 var path = window.location.pathname;
+console.log(path)
 
 if (path == "/schemas/datasets/") {
     var datasets = $(".btn-status")
@@ -33,4 +36,26 @@ function getStatus(id) {
   .fail((err) => {
     console.log(err)
   });
+
+}
+
+
+// when loaded column edit page with following pattern: "schemas/columns/{{column.name}}/edit"
+if (path.startsWith("/schemas/columns/") == true && path.endsWith("/edit") == true) {
+    switchRanges()
+}
+
+function switchRanges() {
+    console.log("switchResult executing")
+    var id = $("#data-type-input option:selected")
+    var minRange = $("#min-range-input")
+    var maxRange = $("#max-range-input")
+    if (id.text() === "integer" || id.text() === "text"){
+        minRange.prop("disabled", false)
+        maxRange.prop("disabled", false)
+    }
+    else{
+        minRange.prop("disabled", true)
+        maxRange.prop("disabled", true)
+    }
 }

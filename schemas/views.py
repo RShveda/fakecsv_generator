@@ -48,7 +48,7 @@ class ColumnCreateView(LoginRequiredMixin, CreateView):
 
 class ColumnUpdateView(LoginRequiredMixin, UpdateView):
     model = Column
-    fields = ["name", "order", "data_type"]
+    form_class = ColumnForm
 
 
 class ColumnDeleteView(LoginRequiredMixin, DeleteView):

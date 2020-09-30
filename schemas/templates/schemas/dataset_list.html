@@ -6,10 +6,10 @@
     <div class="row header d-flex align-items-center">
         <h1 class="col">Data sets</h1>
 
-        <div class="col ">
+        <div class="col">
             <form action="{% url "schemas:dataset_create" %}" method="post">
                 {% csrf_token %}
-                <input name="rows" type="number">
+                <input name="rows" type="number" placeholder="number of rows">
                 <select name="schema" id="schema">
                     {% for schema in schema_list %}
                     <option value="{{schema}}">{{schema}}</option>
