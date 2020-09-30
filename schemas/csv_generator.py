@@ -1,33 +1,34 @@
-from django.core.files import File
 from .models import Schema, DataSet
-import os
 from django.conf import settings
 from faker import Faker
-from celery import shared_task
 import cloudinary.uploader
 
-class CsvFaker:
 
-    @shared_task
+class CsvFaker:
+    """
+    This class handles csv data generation and file creation.
+    Faker (https://faker.readthedocs.io/en/master/index.html) is used to create fake data.
+    """
+
     def make_file(schema, rows, pk):
+        """
+        Method which create file and then uploads it using cloudinary (https://cloudinary.com/).
+        Also uploaded file data is saved to Dataset record in DB.
+        """
         with open(str(settings.MEDIA_ROOT) + "/datasets/buffer" + ".csv", 'w', newline='') as myfile:
-            # myfile = File(f)
             myfile.write(CsvFaker.generate_data(schema, rows))
-        myfile.closed
-        # f.closed
         uploaded_file = cloudinary.uploader.upload(myfile.name, resource_type="raw", public_id=schema + str(rows))
-        print (uploaded_file["secure_url"])
-        print(pk)
-        print(myfile.name)
-        # print(myfile.file.name)
+        # Saving uploaded file to Dataset object
         new_data = DataSet.objects.get(pk=pk)
         new_data.status = "ready"
-        # new_data.url = "media/datasets/" + os.path.basename(myfile.file.name)
         new_data.url = uploaded_file["secure_url"]
         new_data.save()
         return new_data.url
 
     def generate_data(schema, rows):
+        """
+        This method generates fake CSV data using Faker object
+        """
         schema = Schema.objects.get(name=schema)
         columns = schema.columns.order_by("order")
         fake = Faker()
@@ -39,8 +40,7 @@ class CsvFaker:
         """
         This method formats data according to faker csv(dsv) data format described here:
         https://faker.readthedocs.io/en/master/providers/faker.providers.misc.html#faker.providers.misc.Provider.dsv
-        :param fake - faker object that will be generating fake data
-        :return:
+        param fake - Faker object instance that will be generating fake data
         """
         header = []
         data_columns = []
@@ -61,4 +61,3 @@ class CsvFaker:
             else:
                 data_columns.append("{{" + str(column.data_type) + "}}")
         return (tuple(header), tuple(data_columns))
-

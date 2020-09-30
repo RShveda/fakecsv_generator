@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
 {% block body %}
-
-
     <div class="row header d-flex align-items-center">
         <h1 class="col">{{object}}'s columns</h1>
 
@@ -15,11 +13,9 @@
         </div>
     </div>
 
-
-
     <div class="container">
         <span>Add new column:</span>
-        <a class="btn btn-primary" href="{% url "schemas:column_create" object.slug %}">+</a>
+        <a class="btn btn-primary" id="add-column-btn" href="{% url "schemas:column_create" object.slug %}">+</a>
         <table class="table">
             <thead>
                 <tr>
@@ -42,5 +38,4 @@
             </tbody>
         </table>
     </div>
-
 {% endblock body %}

@@ -1,3 +1,12 @@
 h1{
-    color:brown;
+    color:#00008b;
+}
+
+.header{
+    padding-top: 20px;
+}
+
+#add-column-btn{
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

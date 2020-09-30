@@ -1,8 +1,9 @@
 console.log("js loaded")
 
 var path = window.location.pathname;
-console.log(path)
 
+
+//Dataset Page
 if (path == "/schemas/datasets/") {
     var datasets = $(".btn-status")
     console.log(path)
@@ -10,21 +11,19 @@ if (path == "/schemas/datasets/") {
         getStatus(datasets.eq(i).attr("id"))
     }
 }
-
+// function that periodically check Dataset task status and reflect UI accordingly
 function getStatus(id) {
   $.ajax({
     url: `/schemas/datasets/${id}/`,
     method: 'GET'
   })
   .done((res) => {
-    console.log(id)
     $('#'+id).html("Ready");
     $('#'+id).toggleClass('disabled btn-outline-warning', false);
     $('#'+id).toggleClass('btn-outline-success', true);
     const status = res.status;
     const url = res.url;
     $('#'+id).attr("href", url);
-    console.log(res.status)
     if (status === 'ready') return false;
     $('#'+id).html(status);
     $('#'+id).toggleClass('disabled btn-outline-warning', true);
@@ -36,15 +35,14 @@ function getStatus(id) {
   .fail((err) => {
     console.log(err)
   });
-
 }
 
-
-// when loaded column edit page with following pattern: "schemas/columns/{{column.name}}/edit"
+// Column Edit Page (according to following pattern: "schemas/columns/{{column.name}}/edit")
 if (path.startsWith("/schemas/columns/") == true && path.endsWith("/edit") == true) {
     switchRanges()
 }
 
+//function to check if Ranges should be disabled for Columns Form
 function switchRanges() {
     console.log("switchResult executing")
     var id = $("#data-type-input option:selected")

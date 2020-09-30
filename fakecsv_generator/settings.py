@@ -34,7 +34,6 @@ ALLOWED_HOSTS = ["csv-generator.herokuapp.com", '127.0.0.1']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -127,14 +126,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_DIR = BASE_DIR / 'static'
+STATICFILES_DIRS = [STATIC_DIR, ]
+
+# Media files
+
 MEDIA_DIR = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATIC_DIR = BASE_DIR / 'static'
-STATICFILES_DIRS = [STATIC_DIR,]
+# Auth urls
 
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "login"
@@ -146,13 +149,8 @@ db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
 # Celery configs
-# CELERY_RESULT_BACKEND = os.environ.get("DJ_DATABASE_URL", 'django-db')
-# CELERY_RESULT_BACKEND = "db+postgresql://tppdyftitvxrgx:b51d7b0265cde36e722b0220e18d18c3976b2ab2910425ad20f9a5657cd09d69@ec2-54-195-247-108.eu-west-1.compute.amazonaws.com:5432/dd09j37a4sinjc"
 CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL", 'django-db')
-# CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://localhost")
-
-# CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://localhost")
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
@@ -160,10 +158,6 @@ CELERY_CONTENT_ENCODING = 'utf-8'
 CELERY_ENABLE_REMOTE_CONTROL = False
 CELERY_SEND_EVENTS = False
 CELERY_TIMEZONE = 'Europe/Kiev'
-# CELERY_IMPORTS = (
-#     'schemas.tasks',
-#     'schemas.csv_generator',
-# )
 
 # Cloudinary settings for Django. Add to your settings file.
 CLOUDINARY = {

@@ -1,6 +1,7 @@
 from django.forms import ModelForm, NumberInput, Select
 from .models import Column
 
+
 class ColumnForm(ModelForm):
 
     class Meta:

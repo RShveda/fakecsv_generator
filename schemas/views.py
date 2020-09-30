@@ -1,41 +1,42 @@
-from django.shortcuts import render
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import (CreateView, UpdateView, DeleteView)
 from django.views.generic.list import ListView
-from .models import (Schema, Column, DataTypes, DataSet)
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
+
+from .models import (Schema, Column, DataTypes, DataSet)
 from .forms import (ColumnForm)
 from .csv_generator import CsvFaker
-from .tasks import add as test_task
-from .tasks import create_task, make_file_async
-from django.http import JsonResponse
-from pathlib import Path
-
+from .tasks import make_file_async
 
 
 # Create your views here.
 
-
 class SchemaListView(ListView):
     model = Schema
 
+
 class SchemaDetailView(DetailView):
     model = Schema
+
 
 class SchemaCreateView(LoginRequiredMixin, CreateView):
     model = Schema
     fields = ["name"]
 
+
 class SchemaUpdateView(LoginRequiredMixin, UpdateView):
     model = Schema
     fields = ["name"]
 
+
 class SchemaDeleteView(LoginRequiredMixin, DeleteView):
     model = Schema
     success_url = reverse_lazy('schemas:schema_list')
+
 
 class ColumnCreateView(LoginRequiredMixin, CreateView):
     model = Column
@@ -45,6 +46,7 @@ class ColumnCreateView(LoginRequiredMixin, CreateView):
         schema = Schema.objects.get(slug=self.kwargs["schema"])
         order = form.instance.order
         try:
+            # Check if this order number is not used by other column
             Column.objects.get(schema=schema, order=order)
             form.add_error('order', 'Some other column already uses this order number.'
                                 ' Please choose another on.')
@@ -63,6 +65,7 @@ class ColumnUpdateView(LoginRequiredMixin, UpdateView):
         order = form.instance.order
         schema = form.instance.schema
         try:
+            # Check if this order number is not used by other column
             Column.objects.get(schema=schema, order=order)
             form.add_error('order', 'Some other column already uses this order number.'
                                     ' Please choose another on.')
@@ -91,6 +94,9 @@ class DataSetListView(ListView):
 
 
 class GenerateFileView(View):
+    """
+    This view creates a new Dataset (with a file) based on Schema and Rows parameters.
+    """
     model = DataSet
 
     def post(self, request, *args, **kwargs):
@@ -99,34 +105,20 @@ class GenerateFileView(View):
         status = "processing"
         new_data = DataSet.objects.create(title=schema, status=status)
         new_data.save()
-        print("dataset created")
         make_file_async.delay(schema, rows, new_data.pk)
         # CsvFaker.make_file(schema, rows, new_data.pk)
-        # result = test_task.delay(1,2)
         return redirect(reverse("schemas:dataset_list"))
 
 
 class DataSetStatusView(View):
-
+    """
+    This view return file url and status
+    """
     def get(self, request, *args, **kwargs):
         pk = kwargs["pk"]
         data_set = DataSet.objects.get(pk=pk)
-        # my_file = Path(str(data_set.url))
-        # if my_file.is_file():
-        #     status = {
-        #         "status":data_set.status,
-        #         "url":str(data_set.url),
-        #     }
-        # else:
-        #     status = {
-        #         "status": "archived",
-        #     }
         status = {
             "status": data_set.status,
             "url": str(data_set.url),
         }
         return JsonResponse(status, status=200)
-
-
-
-
