@@ -36,8 +36,8 @@ class Column(models.Model):
     schema = models.ForeignKey(Schema, on_delete=models.CASCADE, related_name="columns")
     order = models.IntegerField()
     data_type = models.ForeignKey(DataTypes, on_delete=models.CASCADE)
-    range_min = models.IntegerField(blank=True, null=True)
-    range_max = models.IntegerField(blank=True, null=True)
+    range_min = models.IntegerField(default=0, blank=True)
+    range_max = models.IntegerField(default=0, blank=True)
 
     class Meta:
         unique_together = ('schema', 'order',)

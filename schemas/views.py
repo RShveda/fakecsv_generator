@@ -64,12 +64,14 @@ class ColumnUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         order = form.instance.order
         schema = form.instance.schema
+        print(self.kwargs["slug"])
         try:
             # Check if this order number is not used by other column
-            Column.objects.get(schema=schema, order=order)
-            form.add_error('order', 'Some other column already uses this order number.'
+            column = Column.objects.get(schema=schema, order=order)
+            if (column.slug != self.kwargs["slug"]):
+                form.add_error('order', 'Some other column already uses this order number.'
                                     ' Please choose another on.')
-            return self.form_invalid(form)
+                return self.form_invalid(form)
         except:
             pass
         return super().form_valid(form)

@@ -44,7 +44,6 @@ if (path.startsWith("/schemas/columns/") == true && path.endsWith("/edit") == tr
 
 //function to check if Ranges should be disabled for Columns Form
 function switchRanges() {
-    console.log("switchResult executing")
     var id = $("#data-type-input option:selected")
     var minRange = $("#min-range-input")
     var maxRange = $("#max-range-input")
