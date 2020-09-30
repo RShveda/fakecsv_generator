@@ -1,11 +1,46 @@
 {% extends "base.html" %}
 
 {% block body %}
-    <h1>This is {{object}}'s page</h1>
-    <p>Add new column:</p>
-    <a class="btn btn-primary" href="{% url "schemas:column_create" object.slug %}">Add</a>
-    {% for column in object.columns.all %}
-        <li><a href="{% url "schemas:column_edit" column.slug %}">{{column}}</a></li>
-    {% endfor%}
+
+
+    <div class="row header d-flex align-items-center">
+        <h1 class="col">{{object}}'s columns</h1>
+
+        <div class="col">
+            <form action="{% url "schemas:schema_edit" object.slug %}" method="post">
+                {% csrf_token %}
+                <input name="name" type="text">
+                <input class="btn btn-outline-primary" type="submit" value="Change name">
+            </form>
+        </div>
+    </div>
+
+
+
+    <div class="container">
+        <span>Add new column:</span>
+        <a class="btn btn-primary" href="{% url "schemas:column_create" object.slug %}">+</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Column Name</th>
+                    <th scope="col">Column Order in CSV</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for column in object.columns.all|dictsort:"order" %}
+                    <tr>
+                        <th scope="row">{{column.name}}</th>
+                        <td>{{column.order}}</td>
+                        <td>
+                            <a class="btn btn-status btn-outline-primary" href="{% url "schemas:column_edit" column.slug %}">Edit</a>
+                            <a class="btn btn-status btn-outline-danger" href="{% url "schemas:column_delete" column.slug %}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock body %}

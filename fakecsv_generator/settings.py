@@ -43,8 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_results',
-    'schemas',
     'cloudinary',
+    'bootstrap4',
+    'schemas',
 ]
 
 MIDDLEWARE = [
