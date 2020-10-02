@@ -1,14 +1,14 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import (CreateView, UpdateView, DeleteView)
+from django.views.generic.edit import (CreateView, UpdateView, DeleteView, FormView)
 from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 
 from .models import (Schema, Column, DataTypes, DataSet)
-from .forms import (ColumnForm)
+from .forms import (ColumnForm, ColumnSetForm)
 from .csv_generator import CsvFaker
 from .tasks import make_file_async
 
@@ -31,6 +31,30 @@ class SchemaCreateView(LoginRequiredMixin, CreateView):
 class SchemaUpdateView(LoginRequiredMixin, UpdateView):
     model = Schema
     fields = ["name"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        schema = Schema.objects.get(slug=self.kwargs["slug"])
+        if self.request.POST:
+            formset = ColumnSetForm(self.request.POST, instance=schema)
+        else:
+            formset = ColumnSetForm(instance=schema)
+        context['formset'] = formset
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            self.object = form.save()
+            formset.instance = self.object
+            formset.save()
+            return redirect(reverse("schemas:schema_edit", kwargs={"slug":self.object.slug}))
+        else:
+            print(formset.errors)
+            form.add_error("name", "one of the column is invalid")
+            return self.form_invalid(form)
+
 
 
 class SchemaDeleteView(LoginRequiredMixin, DeleteView):
@@ -64,7 +88,6 @@ class ColumnUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         order = form.instance.order
         schema = form.instance.schema
-        print(self.kwargs["slug"])
         try:
             # Check if this order number is not used by other column
             column = Column.objects.get(schema=schema, order=order)
@@ -95,7 +118,7 @@ class DataSetListView(ListView):
         return context
 
 
-class GenerateFileView(View):
+class GenerateFileView(LoginRequiredMixin, View):
     """
     This view creates a new Dataset (with a file) based on Schema and Rows parameters.
     """

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="row header d-flex align-items-center">
+        <h1 class="col">Columns set form</h1>
+
+        <div class="col">
+            <form action="/" method="post">
+                {% csrf_token %}
+                <input name="name" type="text">
+                <input class="btn btn-outline-primary" type="submit" value="Change name">
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Add">
+        </form>
+<!--        <form method="post">-->
+<!--            {{ formset.management_form }}-->
+<!--            <table>-->
+<!--                {% for form in formset %}-->
+<!--                {{ form }}-->
+<!--                {% endfor %}-->
+<!--            </table>-->
+<!--        </form>-->
+    </div>
+{% endblock body %}

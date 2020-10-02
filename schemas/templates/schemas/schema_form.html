@@ -2,12 +2,52 @@
 
 {% block body %}
 {% load bootstrap4 %}
-    <div class="jumbotron col-8">
+    <div class="jumbotron">
         <h1>Create/edit schema form</h1>
         <form method="post">
             {% csrf_token %}
-            {% bootstrap_form form %}
+            {{form}}
             <input class="btn btn-outline-primary" type="submit" value="Update">
+            {{ formset.management_form }}
+            {% for form in formset %}
+                {{ form.id }}
+                <div class="row">
+                    <div class="col">
+                        <div>{{ form.name.label_tag }}</div>
+                        <div>{{ form.name }}</div>
+                    </div>
+                    <div class="col">
+                        <div>{{ form.data_type.label_tag }}</div>
+                        <div>{{ form.data_type }}</div>
+                    </div>
+                    <div class="col">
+                        <div>{{ form.range_min.label_tag }}</div>
+                        <div>{{ form.range_min }}</div>
+                    </div>
+                    <div class="col">
+                        <div>{{ form.range_max.label_tag }}</div>
+                        <div>{{ form.range_max }}</div>
+                    </div>
+                    <div class="col">
+                        <div>{{ form.order.label_tag }}</div>
+                        <div>{{ form.order }}</div>
+                    </div>
+                    {% if form.instance.pk %}
+                    <div class="col">
+                        <div>Delete</div>
+                        <div>{{ form.DELETE }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+            {% endfor %}
+
         </form>
     </div>
+
+
+
+<!--    <form method="post">-->
+<!--        {{ formset }}-->
+<!--    </form>-->
 {% endblock body %}
