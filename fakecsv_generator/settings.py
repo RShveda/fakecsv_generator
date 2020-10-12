@@ -159,9 +159,3 @@ CELERY_ENABLE_REMOTE_CONTROL = False
 CELERY_SEND_EVENTS = False
 CELERY_TIMEZONE = 'Europe/Kiev'
 
-# Cloudinary settings for Django. Add to your settings file.
-CLOUDINARY = {
-  'cloud_name': 'ha1dnhqfb',
-  'api_key': '851921685312127',
-  'api_secret': 'YuJxrZ0K99XAriqdQHOst2IIXlY',
-}

@@ -4,6 +4,9 @@
 {% load bootstrap4 %}
     <div class="jumbotron col-8">
         <h1>This is login page</h1>
+        <div>
+            You may use test credentials: <strong>admin / somepass</strong>
+        </div>
         <form class="" method="post">
             {% csrf_token %}
             {% bootstrap_form form %}
