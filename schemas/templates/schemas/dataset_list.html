@@ -8,7 +8,7 @@
         <div class="col">
             <form action="{% url "schemas:dataset_create" %}" method="post">
                 {% csrf_token %}
-                <input name="rows" type="number" placeholder="number of rows">
+                <input name="rows" type="number" placeholder="number of rows" value="10" min="1" required>
                 <select name="schema" id="schema">
                     {% for schema in schema_list %}
                     <option value="{{schema}}">{{schema}}</option>

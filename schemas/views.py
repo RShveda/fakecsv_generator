@@ -49,7 +49,7 @@ class ColumnCreateView(LoginRequiredMixin, CreateView):
             # Check if this order number is not used by other column
             Column.objects.get(schema=schema, order=order)
             form.add_error('order', 'Some other column already uses this order number.'
-                                ' Please choose another on.')
+                                ' Please choose another one.')
             return self.form_invalid(form)
         except:
             pass

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = BASE_DIR / 'templates'
@@ -21,14 +22,12 @@ SCHEMAS_DIR = BASE_DIR / 'schemas/templates/schemas'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = '_h^6usgntj@0!$9sjc5m-^#10w2mdaandh_zwd+p_n8+90$5&v'
 
 import os
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '_h^6usgntj@0!$9sjc5m-^#10w2mdaandh_zwd+p_n8+90$5&v')
-# SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+from config import *
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', DJANGO_SECRET_KEY)
+
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True')
 
 ALLOWED_HOSTS = ["csv-generator.herokuapp.com", '127.0.0.1']
 
@@ -84,8 +83,12 @@ WSGI_APPLICATION = 'fakecsv_generator.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'csvgenerator',
+        'USER': LOCAL_DB_USER,
+        'PASSWORD': LOCAL_DB_PASS,
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 

@@ -6,7 +6,7 @@ from django.urls import reverse
 # Create your models here.
 
 class Schema(models.Model):
-    name = models.CharField(max_length=80)
+    name = models.CharField(max_length=80, unique=True)
     slug = models.CharField(max_length=100, null=True)
     separator = models.CharField(max_length=10, blank=True, null=True)
     string_char = models.CharField(max_length=10, blank=True, null=True)
@@ -24,6 +24,10 @@ class Schema(models.Model):
 
 
 class DataTypes(models.Model):
+    """
+    Currently supported following types: "name", "job", "email", "integer", "address", "text".
+    Must be added via django admin interface.
+    """
     type = models.CharField(max_length=80)
 
     def __str__(self):
@@ -32,7 +36,7 @@ class DataTypes(models.Model):
 
 class Column(models.Model):
     slug = models.CharField(max_length=100, null=True)
-    name = models.CharField(max_length=80)
+    name = models.CharField(max_length=80, unique=True)
     schema = models.ForeignKey(Schema, on_delete=models.CASCADE, related_name="columns")
     order = models.IntegerField()
     data_type = models.ForeignKey(DataTypes, on_delete=models.CASCADE)
