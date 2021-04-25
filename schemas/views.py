@@ -1,5 +1,6 @@
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
+from django.utils.text import slugify
 from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import (CreateView, UpdateView, DeleteView)
@@ -27,6 +28,18 @@ class SchemaCreateView(LoginRequiredMixin, CreateView):
     model = Schema
     fields = ["name"]
 
+    def form_valid(self, form):
+        slug = slugify(form.instance.name)
+        try:
+            # Check if this order number is not used by other column
+            Schema.objects.get(slug=slug)
+            form.add_error('name', 'Some other schema already uses similar name.'
+                                    ' Please choose another one.')
+            return self.form_invalid(form)
+        except:
+            pass
+        return super().form_valid(form)
+
 
 class SchemaUpdateView(LoginRequiredMixin, UpdateView):
     model = Schema
@@ -49,10 +62,21 @@ class ColumnCreateView(LoginRequiredMixin, CreateView):
             # Check if this order number is not used by other column
             Column.objects.get(schema=schema, order=order)
             form.add_error('order', 'Some other column already uses this order number.'
-                                ' Please choose another one.')
+                                    ' Please choose another one.')
             return self.form_invalid(form)
         except:
             pass
+
+        try:
+            # Check if column name slug is not unique
+            slug = slugify(form.instance.name)
+            Column.objects.get(slug=slug)
+            form.add_error('name', 'Some other column already uses similar name.'
+                                   ' Please choose another one.')
+            return self.form_invalid(form)
+        except:
+            pass
+
         form.instance.schema = schema
         return super().form_valid(form)
 
@@ -68,9 +92,9 @@ class ColumnUpdateView(LoginRequiredMixin, UpdateView):
         try:
             # Check if this order number is not used by other column
             column = Column.objects.get(schema=schema, order=order)
-            if (column.slug != self.kwargs["slug"]):
+            if column.slug != self.kwargs["slug"]:
                 form.add_error('order', 'Some other column already uses this order number.'
-                                    ' Please choose another on.')
+                                        ' Please choose another on.')
                 return self.form_invalid(form)
         except:
             pass
@@ -116,6 +140,7 @@ class DataSetStatusView(View):
     """
     This view return file url and status
     """
+
     def get(self, request, *args, **kwargs):
         pk = kwargs["pk"]
         data_set = DataSet.objects.get(pk=pk)
